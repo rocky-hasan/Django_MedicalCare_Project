@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock title %}
+{% block content %}
+<style>
+    .black-text {
+      color: black;
+    }
+  </style>
+<div class="jumbotron" style="background: none;">
+    <div class="row mx-5">
+        <div class="col-md-9 mx-5"><h1 id="h1">Medicine Store Management</h1></div>
+    </div>
+</div>
+<div class="container black-text">
+    <div class="col-md-2"></div>
+    <div class="panel panel-default col-md-8 jumcust2">
+        <div class="panel-heading">
+            <h1 class="padtop5">
+                {% if add %}
+                    Add Medicine Details
+                {% else %}
+                    Update Medicine Details
+                {% endif %}</h1>
+        </div>
+        <div class="panel-body">
+            {% if med %}
+                <form action="{% url 'medformupdate' med.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-3 padtop5">
+                            <label for="m_id" class="form-control-label">Medicine Code:</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="m_id" placeholder="Code" name="mid"
+                                   value="{{ med.m_id }}"/>
+                        </div>
+                    </div>
+                    <div class="row padtop15">
+                        <div class="col-md-3 padtop5">
+                            <label for="mname" class="form-control-label">Medicine Name:</label>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <input type="text" name="mname" class="form-control" id="mname" placeholder="Medicine Name"
+                                   value="{{ med.mname }}" required/>
+                        </div>
+                    </div>
+                    <div class="row padtop5">
+                        <div class="col-md-3 padtop5">
+                            <label for="dname" class="form-control-label">Dealer Name:</label>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <input type="text" name="dname" class="form-control" id="dname" placeholder="Dealer Name"
+                                   value="{{ med.dname }}"/>
+                        </div>
+                    </div>
+                    <div class="row padtop5">
+                        <div class="col-md-3">
+                            <label for="price" class="form-control-label padtop5">Price:</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="price" class="form-control" id="price" placeholder="Price"
+                                   value="{{ med.price }}" required/>
+                        </div>
+                    </div>
+                    <div class="row padtop15">
+                        <div class="col-md-3">
+                            <label for="stock" class="form-control-label padtop5">Stock:</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="stock" class="form-control" id="stock" placeholder="Stock"
+                                   value="{{ med.stock }}"/>
+                        </div>
+                    </div>
+                    <div class="row padtop15">
+                        <div class="col-md-3">
+                            <label for="desc" class="form-control-label padtop5">Description:</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="desc" class="form-control" id="desc" placeholder="Description"
+                                   value="{{ med.desc }}"/>
+                        </div>
+                    </div>
+                    <div class="row" id="buttoncustom">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-2 padtop15">
+                            <button type="submit" class="btn btn-default"><a href="{% url 'medtable' %}">Cancel</a></button>
+                        </div>
+                        <div class="col-md-2 padtop15">
+                            <button type="submit" class="btn btn-primary">
+                                {% if add %}
+                                    Add Record
+                                {% else %}
+                                    Update Record
+                                {% endif %}</button>
+                        </div>
+                        <div class="col-md-offset-8 padtop15">
+                            <button type="submit" class="delbut btn btn-danger"><a
+                                    href="{% url 'medformdelete' med.id %}">Delete Record</a></button>
+                        </div>
+                    </div>
+                </form>
+            {% else %}
+                <form action="{% url 'medforminsert' %}" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-3 padtop5">
+                            <label for="m_id" class="form-control-label">Medicine Code:</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="m_id" placeholder="Code" name="mid"/>
+                        </div>
+                    </div>
+                    <div class="row padtop15">
+                        <div class="col-md-3 padtop5">
+                            <label for="mname" class="form-control-label">Medicine Name:</label>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <input type="text" name="mname" class="form-control" id="mname" placeholder="Medicine Name"
+                                   value="" required/>
+                        </div>
+                    </div>
+                    <div class="row padtop5">
+                        <div class="col-md-3 padtop5">
+                            <label for="dname" class="form-control-label">Dealer Name:</label>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <input type="text" name="dname" class="form-control" id="dname" placeholder="Dealer Name"
+                                   value=""/>
+                        </div>
+                    </div>
+                    <div class="row padtop5">
+                        <div class="col-md-3">
+                            <label for="price" class="form-control-label padtop5">Price:</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="price" class="form-control" id="price" placeholder="Price"
+                                   required/>
+                        </div>
+                    </div>
+                    <div class="row padtop15">
+                        <div class="col-md-3">
+                            <label for="stock" class="form-control-label padtop5">Stock:</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="stock" class="form-control" id="stock" placeholder="Stock"/>
+                        </div>
+                    </div>
+                    <div class="row padtop15">
+                        <div class="col-md-3">
+                            <label for="desc" class="form-control-label padtop5">Description:</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="desc" class="form-control" id="desc" placeholder="Description"/>
+                        </div>
+                    </div>
+                    <div class="row" id="buttoncustom">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-2 padtop15">
+                            <button type="submit" class="btn btn-default"><a href="{% url 'medtable' %}">Cancel</a></button>
+                        </div>
+                        <div class="col-md-2 padtop15">
+                            <button type="submit" class="btn btn-primary">
+                                {% if add %}
+                                    Add Record
+                                {% else %}
+                                    Update Record
+                                {% endif %}</button>
+                        </div>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+{% endblock content %}
+

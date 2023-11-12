@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock title %}
+{% block content %}
+<style>
+    .black-text {
+      color: black;
+    }
+  </style>
+<div class="container-fluid martop7 black-text">
+    <div class="jumbotron jumcust">
+        <h2>Medicine Details</h2>
+        <div class="row">
+            <div class="col-md-1">
+            </div>
+            <table border="1" class="table table-responsive table-hover col-md-10">
+                <tr>
+                    <th>Medicine Code</th>
+                    <th>Medicine Name</th>
+                    <th>Dealer Name</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Description</th>
+                </tr>
+                {% for foo in med %}
+                    <tr>
+                        <td class="idlink"><a href="{% url 'medformview' foo.id %}">{{ foo.m_id }}</a></td>
+                        <td>{{ foo.mname }}</td>
+                        <td>{{ foo.dname }}</td>
+                        <td>{{ foo.price }}</td>
+                        <td>{{ foo.stock }}</td>
+                        <td>{{ foo.desc }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <footer><h3>Click on a Medicine ID to Update or Delete the record.</h3></footer>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static%}
+{% block title %}Employee_table {% endblock title %}
+{% block content %}
+<style>
+    .black-text {
+      color: black;
+    }
+  </style>
+<div class="container-fluid martop7 black-text">
+    <div class="jumbotron jumcust">
+        <h2>Employee Details</h2>
+        <div class="row">
+            <div class="col-md-1">
+            </div>
+            <table border="1" class="table table-responsive table-hover col-md-10">
+                <tr>
+                    <th>Employee ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Address</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                    <th>Salary</th>
+                </tr>
+                {% for foo in emp %}
+                    <tr>
+                        <td class="idlink"><a href="{% url 'empformview' foo.Emp_id  %}">{{ foo.Emp_id }}</a></td>
+                        <td>{{ foo.fname }}</td>
+                        <td>{{ foo.lname }}</td>
+                        <td>{{ foo.address }}</td>
+                        <td>{{ foo.phone_number }}</td>
+                        <td>{{ foo.email }}</td>
+                        <td>{{ foo.salary }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <footer><h3>Click on an Employee ID to Update or Delete the record.</h3></footer>
+    </div>
+</div>
+{% endblock content %}

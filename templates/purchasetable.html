@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Purchase_table{% endblock title %}
+{% block content %}
+<style>
+    .black-text {
+      color: black;
+    }
+  </style>
+<div class="container-fluid martop7 black-text">
+    
+    <div class="jumbotron jumcust">
+        <h2>Purchase Details</h2>
+        <div class="row padtop15">
+            <div class="col-md-1"></div>
+        </div>
+        {% if purchase %}
+        <div class="row">
+            <div class="col-md-1">
+            </div>
+            <table border="1" class="table table-responsive table-hover col-md-10">
+                <tr>
+                    <th>Purchase ID</th>
+                    <th>Product Name</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone Number</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+                {% for foo in purchase %}
+                    <tr>
+                        <td class="idlink"><a href="{% url 'purchaseformview' foo.id %}">{{ foo.id }}</a></td>
+                        <td>{{ foo.pname }}</td>
+                        <td>{{ foo.fname }}</td>
+                        <td>{{ foo.lname }}</td>
+                        <td>{{ foo.phone_number }}</td>
+                        <td>{{ foo.price }}</td>
+                        <td>{{ foo.quantity }}</td>
+                        <td>{{ foo.total }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        
+        <footer><h3>Click on a Purchase ID to Update or Delete the record.</h3></footer>
+        {% else %}
+        <footer><h3>Empty Purchase Enter Data <a href="{% url 'purchaseform' %}">here</a></h3></footer>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

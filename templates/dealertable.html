@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}
+Dealer-table
+{% endblock title %}
+{% block content %}
+<style>
+    .black-text {
+      color: black;
+    }
+  </style>
+<div class="container-fluid martop7 black-text">
+    <div class="jumbotron jumcust">
+        <h2 class="text-dark">Dealer Details</h2>
+        <div class="row text-dark">
+            <div class="col-md-1">
+            </div>
+            <table border="1" class="table table-responsive table-hover col-md-10 ">
+                <tr>
+                    <th>Dealer ID</th>
+                    <th>Dealer Name</th>
+                    <th>Address</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                </tr>
+                {% for foo in dealer %}
+                    <tr class="black-text">
+                        <td class="idlink"><a href="{% url 'dealerformview' foo.id  %}">{{ foo.id }}</a></td>
+                        <td>{{ foo.dealer_name }}</td>
+                        <td>{{ foo.address }}</td>
+                        <td>{{ foo.phone_number }}</td>
+                        <td>{{ foo.email }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <footer><h3>Click on a Dealer ID to Update or Delete the record.</h3></footer>
+    </div>
+</div>
+{% endblock content %}

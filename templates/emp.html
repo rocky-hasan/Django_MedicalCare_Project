@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Employee {% endblock title %}
+{% block content %}
+<style>
+    .black-text {
+      color: black;
+    }
+  </style>
+<div class="jumbotron" style="background: none;">
+    <div class="row mx-5">
+        <div class="col-md-9 mx-5"><h1 id="h1">Employee Store Management</h1></div>
+    </div>
+</div>
+<div class="container black-text">
+    <div class="col-md-2"></div>
+    <div class="panel panel-default col-md-8 jumcust2">
+        <div class="panel-heading">
+            <h1 class="padtop5">
+                {% if add %}
+                    Add Employee Details
+                {% else %}
+                    Update Employee Details
+                {% endif %}</h1>
+        </div>
+        <div class="panel-body">
+            {% if emp %}
+                <form action="{% url 'empformupdate' emp.Emp_id  %}" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-3 padtop5">
+                            <label for="e_id" class="form-control-label">Employee ID:</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="e_id" placeholder="Code" name="eid"
+                                   value="{{ emp.Emp_id }}" required/>
+                        </div>
+                    </div>
+                    <div class="row padtop15">
+                        <div class="col-md-3 padtop5">
+                            <label for="firstName" class="form-control-label">Employee Name:</label>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <input type="text" name="fname" class="form-control" id="firstName" placeholder="First Name"
+                                   value="{{ emp.fname }}" required/>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="lname" class="form-control" id="lastName" placeholder="Last Name"
+                                   value="{{ emp.lname }}" required/>
+                        </div>
+                    </div>
+                    <div class="row padtop5">
+                        <div class="col-md-3 padtop5">
+                            <label for="address" class="form-control-label">Address:</label>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <input type="text" class="form-control" id="address" placeholder="Address" name="address"
+                                   value="{{ emp.address }}"/>
+                        </div>
+                    </div>
+                    <div class="row padtop5">
+                        <div class="col-md-3 padtop5">
+                            <label for="sal" class="form-control-label">Salary:</label>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <input type="text" class="form-control" id="sal" placeholder="Salary" name="sal"
+                                   value="{{ emp.salary }}" required/>
+                        </div>
+                    </div>
+                    <div class="row padtop5">
+                        <div class="col-md-3">
+                            <label for="phn_no" class="form-control-label padtop5">Phone Number:</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="pno" class="form-control" id="phn_no" placeholder="Contact Number"
+                                   value="{{ emp.phone_number }}" required/>
+                        </div>
+                    </div>
+                    <div class="row padtop15">
+                        <div class="col-md-3">
+                            <label for="email" class="form-control-label padtop5">Email:</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="email" class="form-control" id="email" placeholder="Email"
+                                   value="{{ emp.email }}"/>
+                        </div>
+                    </div>
+                    <div class="row" id="buttoncustom">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-2 padtop15">
+                            <button type="submit" class="btn btn-default"><a href="{% url 'emptable' %}">Cancel</a></button>
+                        </div>
+                        <div class="col-md-2 padtop15">
+                            <button type="submit" class="btn btn-primary">
+                                {% if add %}
+                                    Add Record
+                                {% else %}
+                                    Update Record
+                                {% endif %}</button>
+                        </div>
+                        <div class="col-md-offset-8 padtop15">
+                            <button type="submit" class="delbut btn btn-danger"><a
+                                    href="{% url 'empformdelete' emp.id  %}">Delete Record</a></button>
+                        </div>
+                    </div>
+                </form>
+            {% else %}
+                <form action="{% url 'empforminsert' %}" method="post">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-3 padtop5">
+                            <label for="e_id" class="form-control-label">Employee ID:</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="e_id" placeholder="ID" name="eid" required/>
+                        </div>
+                    </div>
+                    <div class="row padtop15">
+                        <div class="col-md-3 padtop5">
+                            <label for="firstName" class="form-control-label">Employee Name:</label>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <input type="text" name="fname" class="form-control" id="firstName" placeholder="First Name"
+                                   value="" required/>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="lname" class="form-control" id="lastName" placeholder="Last Name"
+                                   required/>
+                        </div>
+                    </div>
+                    <div class="row padtop5">
+                        <div class="col-md-3 padtop5">
+                            <label for="address" class="form-control-label">Address:</label>
+                        </div>
+                        <div class="form-group col-md-8">
+                            <input type="text" class="form-control" id="address" placeholder="Address" name="address"/>
+                        </div>
+                    </div>
+                    <div class="row padtop5">
+                        <div class="col-md-3 padtop5">
+                            <label for="sal" class="form-control-label">Salary:</label>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <input type="text" class="form-control" id="sal" placeholder="Salary" name="sal" required/>
+                        </div>
+                    </div>
+                    <div class="row padtop5">
+                        <div class="col-md-3">
+                            <label for="phn_no" class="form-control-label padtop5">Phone Number:</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="pno" class="form-control" id="phn_no" placeholder="Contact Number"
+                                   required/>
+                        </div>
+                    </div>
+                    <div class="row padtop15">
+                        <div class="col-md-3">
+                            <label for="email" class="form-control-label padtop5">Email:</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="email" class="form-control" id="email" placeholder="Email"/>
+                        </div>
+                    </div>
+                    <div class="row" id="buttoncustom">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-2 padtop15">
+                            <button type="submit" class="btn btn-default"><a href="{% url 'home' %}">Cancel</a></button>
+                        </div>
+                        <div class="col-md-2 padtop15">
+                            <button type="submit" class="btn btn-primary">
+                                {% if add %}
+                                    Add Record
+                                {% else %}
+                                    Update Record
+                                {% endif %}</button>
+                        </div>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+{% endblock content %}
+
+

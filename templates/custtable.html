@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Customer_table{% endblock title %}
+{% block content %}
+<style>
+    .black-text {
+      color: black;
+    }
+  </style>
+<div class="container-fluid martop7 black-text">
+    <div class="jumbotron jumcust">
+        <h2>Customer Details</h2>
+        <div class="row">
+            <div class="col-md-1">
+            </div>
+            <table border="1" class="col-md-10 table table-hover table-responsive">
+                <tr>
+                    <th>Customer ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Address</th>
+                    <th>Phone Number</th>
+                    <th>Email</th>
+                </tr>
+                {% for foo in cust %}
+                    <tr>
+                        <td class="idlink"><a href="{% url 'custformview' foo.id  %}">{{ foo.id }}</a></td>
+                        <td>{{ foo.fname }}</td>
+                        <td>{{ foo.lname }}</td>
+                        <td>{{ foo.address }}</td>
+                        <td>{{ foo.phone_number }}</td>
+                        <td>{{ foo.email }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+        <footer><h3>Click on a Customer ID to Update or Delete the record.</h3></footer>
+    </div>
+</div>
+{% endblock content %}

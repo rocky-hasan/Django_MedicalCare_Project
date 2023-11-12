@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock title %}
+{% block content %}
+<style>
+    .black-text {
+      color: black;
+    }
+  </style>
+  <div class="jumbotron" style="background: none;">
+    <div class="row mx-5">
+        <div class="text-center"><h1 id="h1">Purchase Store Management</h1></div>
+    </div>
+</div>
+<div class="container black-text">
+    <div class="col-md-2"></div>
+    <div class="panel panel-default col-md-8 jumcust2">
+        <div class="panel-heading">
+            <h1 class="padtop5">
+                {% if add %}
+                    Add Purchase Details
+                {% else %}
+                    Update Purchase Details
+                {% endif %}
+            </h1>
+        </div>
+        <div class="panel-body">
+            {% if purchase %}
+                <form action="{% url 'purchaseformupdate' purchase.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="row padtop15">
+                        <div class="col-md-3 padtop5">
+                            <label for="productName" class="form-control-label">Product Name:</label>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <input type="text" name="pname" class="form-control" id="productName"
+                                   placeholder="Product Name" value="{{ purchase.pname }}" required/>
+                        </div>
+                    </div>
+                    <div class="row padtop15">
+                        <div class="col-md-3 padtop5">
+                            <label for="firstName" class="form-control-label">Customer Name:</label>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <input type="text" name="fname" class="form-control" id="firstName" placeholder="First Name"
+                                   value="{{ purchase.fname }}" required/>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="lname" class="form-control" id="lastName" placeholder="Last Name"
+                                   value="{{ purchase.lname }}" required/>
+                        </div>
+                    </div>
+                    <div class="row padtop5">
+                        <div class="col-md-3">
+                            <label for="phn_no" class="form-control-label padtop5">Phone Number:</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="pno" class="form-control" id="phn_no" placeholder="Contact Number"
+                                   value="{{ purchase.phone_number }}" required/>
+                        </div>
+                    </div>
+                    <div class="row padtop15">
+                        <div class="col-md-3">
+                            <label for="price" class="form-control-label padtop5">Price:</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="price" class="form-control" id="price" placeholder="Price"
+                                   value="{{ purchase.price }}" required/>
+                        </div>
+                    </div>
+                    <div class="row padtop15">
+                        <div class="col-md-3">
+                            <label for="qty" class="form-control-label padtop5">Quantity:</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="qty" class="form-control" id="qty" placeholder="Quantity"
+                                   value="{{ purchase.quantity }}" required/>
+                        </div>
+                    </div>
+                    <div class="row" id="buttoncustom">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-2 padtop15">
+                            <button type="submit" class="btn btn-default"><a href="{% url 'purchasetable' %}">Cancel</a></button>
+                        </div>
+                        <div class="col-md-2 padtop15">
+                            <button type="submit" class="btn btn-primary">
+                                {% if add %}
+                                    Add Record
+                                {% else %}
+                                    Update Record
+                                {% endif %}
+                            </button>
+                        </div>
+                        <div class="col-md-offset-8 padtop15">
+                            <button type="submit" class="delbut btn btn-danger"><a
+                                    href="{% url 'purchaseformdelete' purchase.id %}">Delete Record</a></button>
+                        </div>
+                    </div>
+                </form>
+            {% else %}
+                <form action="{% url 'purchaseforminsert' %}" method="post">
+                    {% csrf_token %}
+                    <div class="row padtop15">
+                        <div class="col-md-3 padtop5">
+                            <label for="productName" class="form-control-label">Product Name:</label>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <input type="text" name="pname" class="form-control" id="productName"
+                                   placeholder="Product Name" value="" required/>
+                        </div>
+                    </div>
+                    <div class="row padtop15">
+                        <div class="col-md-3 padtop5">
+                            <label for="firstName" class="form-control-label">Customer Name:</label>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <input type="text" name="fname" class="form-control" id="firstName" placeholder="First Name"
+                                   value="" required/>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="lname" class="form-control" id="lastName" placeholder="Last Name"
+                                   required/>
+                        </div>
+                    </div>
+                    <div class="row padtop5">
+                        <div class="col-md-3">
+                            <label for="phn_no" class="form-control-label padtop5">Phone Number:</label>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="pno" class="form-control" id="phn_no" placeholder="Contact Number"
+                                   required/>
+                        </div>
+                    </div>
+                    <div class="row padtop15">
+                        <div class="col-md-3">
+                            <label for="price" class="form-control-label padtop5">Price:</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="price" class="form-control" id="price" placeholder="Price"
+                                   required/>
+                        </div>
+                    </div>
+                    <div class="row padtop15">
+                        <div class="col-md-3">
+                            <label for="qty" class="form-control-label padtop5">Quantity:</label>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="qty" class="form-control" id="qty" placeholder="Quantity"
+                                   required/>
+                        </div>
+                    </div>
+                    <div class="row" id="buttoncustom">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-2 padtop15">
+                            <button type="submit" class="btn btn-default"><a href="{% url 'purchasetable' %}">Cancel</a></button>
+                        </div>
+                        <div class="col-md-2 padtop15">
+                            <button type="submit" class="btn btn-primary">
+                                {% if add %}
+                                    Add Record
+                                {% else %}
+                                    Update Record
+                                {% endif %}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+{% endblock content %}
