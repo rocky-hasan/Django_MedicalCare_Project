@@ -8,16 +8,23 @@ urlpatterns = [
 
     # Dealer_________url_________:
     path('dealerform/', views.dealerform, name='dealerform'),
-    path('dealerforminsert/', views.dealerforminsert, name='dealerforminsert'),
-    path('dealerformupdate/<int:d_pk>/', views.dealerformupdate, name='dealerformupdate'),
+
+    path('dealerforminsert/', views.DealerCreateView.as_view(), name='dealerforminsert'),
+    #path('dealerformupdate/<int:d_pk>/', views.dealerformupdate, name='dealerformupdate'),
+
+    path('dealerformupdate/<int:id>/', views.DealerUpdateView.as_view(), name='dealerformupdate'),
+
     path('dealerformview/<int:pk>/', views.Dealerformview.as_view(), name='dealerformview'),
     path('dealerformdelete/<int:d_pk>/', views.dealerformdelete, name='dealerformdelete'),
     path('dealertable/', views.Dealertable.as_view(), name='dealertable'),
 
     #  Employee_______url_______:
     path('empform/', views.empform, name='empform'),
-    path('empforminsert/', views.empforminsert, name='empforminsert'),
-    path('empformupdate/<int:emp_pk>/',views.empformupdate,name='empformupdate'),
+    #path('empforminsert/', views.empforminsert, name='empforminsert'),
+
+    path('empforminsert/', views.EmpCreateView.as_view(), name='empforminsert'),
+
+    path('empformupdate/<int:emp_pk>/', views.empformupdate,name='empformupdate'),
     path('empformdelete/<int:emp_pk>/', views.empformdelete, name='empformdelete'),
     path('empformview/<int:emp_pk>/',views.empformview, name='empformview'),
     path('emptable/', views.emptable, name='emptable'),

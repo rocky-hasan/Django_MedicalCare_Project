@@ -1,10 +1,12 @@
 from django.contrib import admin
-from .models import Dealerinfo,Customer,Purchase,Medicineinfo,Employeeinfo
+from .models import Dealerinfo, Customer, Purchase, Medicineinfo, Employeeinfo
+
+
 # Register your models here.
 
 @admin.register(Dealerinfo)
 class DealerinfoAdmin(admin.ModelAdmin):
-    list_display=['dealer_name','address','phone_number','email']
+    list_display = ['dealer_name', 'address', 'phone_number', 'email']
 
 
 admin.site.register(Customer)

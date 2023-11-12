@@ -1,23 +1,26 @@
 from typing import Any
-from django.shortcuts import render,get_object_or_404, redirect
-from .forms import Dealerform
-from django.http import Http404
-from .models import Dealerinfo,Employeeinfo,Customer,Medicineinfo,Purchase
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
+from .forms import Dealerform, EmployeeForm
+from django.http import Http404, request
+from .models import Dealerinfo, Employeeinfo, Customer, Medicineinfo, Purchase
 from django.db import IntegrityError, models
-from django.views.generic import ListView, DetailView, DeleteView   #{ Showing data }
+from django.views.generic import ListView, DetailView, DeleteView, CreateView, UpdateView
 
 
 # Create your views here.
 def home(request):
     return render(request, 'home.html')
 
+
 def dealerform(request):
-    context={
+    context = {
         'add': True
     }
     return render(request, 'dealer.html', context)
 
-def dealerforminsert(request):
+
+'''def dealerforminsert(request):
     try:
         dealer = Dealerinfo()
         dealer.dealer_name = request.POST['dname']
@@ -27,9 +30,10 @@ def dealerforminsert(request):
         dealer.save()
     except IntegrityError:
         return render(request, "new.html")
-    return redirect('dealertable')
+    return redirect('dealertable')'''
 
-def dealerformupdate(request, d_pk):
+
+'''def dealerformupdate(request, d_pk):
     try:
         dealer = get_object_or_404(Dealerinfo, pk=d_pk)
         dealer.dealer_name = request.POST['dname']
@@ -39,9 +43,39 @@ def dealerformupdate(request, d_pk):
         dealer.save()
     except IntegrityError:
         return render(request, 'new.html')
-    return redirect('dealertable')
+    return redirect('dealertable')'''
+
+
+class DealerUpdateView(UpdateView):
+    template_name = 'dealer.html'
+    context_object_name = 'dealer'
+    model = Dealerinfo
+    form_class = Dealerform
+    success_url = reverse_lazy('dealertable')
+
+    def get_object(self):
+        id = self.kwargs.get("id")  # Use 'id' as the parameter
+        return get_object_or_404(Dealerinfo, id=id)
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form)
+
+
 
 # Class Based view
+
+class DealerCreateView(CreateView):
+    template_name = 'dealer.html'
+    context_object_name = 'dealer'
+    form_class = Dealerform
+    success_url = reverse_lazy('dealertable')
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        return super().form_valid(form)
+
+
 class Dealerformview(DetailView):
     model = Dealerinfo
     template_name = 'dealer.html'
@@ -55,18 +89,20 @@ def dealerformdelete(request, d_pk):
 
 
 class Dealertable(ListView):
-    model =Dealerinfo
+    model = Dealerinfo
     template_name = 'dealertable.html'
     context_object_name = 'dealer'
 
-#_______Employee Info_________
-def empform(request):
-    context={
-        'add':True
-    }
-    return render(request, 'emp.html',context)
 
-def empforminsert(request):
+# _______Employee Info_________
+def empform(request):
+    context = {
+        'add': True
+    }
+    return render(request, 'emp.html', context)
+
+
+'''def empforminsert(request):
     try:
         emp = Employeeinfo()
         emp.Emp_id = request.POST['eid']
@@ -79,7 +115,15 @@ def empforminsert(request):
         emp.save()
     except IntegrityError:
         return render(request, 'new.html')
-    return redirect('empforminsert')
+    return redirect('empforminsert')'''
+
+
+class EmpCreateView(CreateView):
+    template_name = 'emp.html'
+    context_object_name = 'emp'
+    form_class = EmployeeForm
+    success_url = reverse_lazy('emptable')
+
 
 def empformupdate(request, emp_pk):
     try:
@@ -94,36 +138,43 @@ def empformupdate(request, emp_pk):
         emp.save()
     except IntegrityError:
         return render(request, 'new.html')
-    return redirect('emptable')    
+    return redirect('emptable')
 
-def empformdelete(request,emp_pk):
+
+def empformdelete(request, emp_pk):
     emp = Employeeinfo.objects.get(pk=emp_pk)
     emp.delete()
     return redirect('emptable')
+
+
 def emptable(request):
-    emp= Employeeinfo.objects.all()
-    context={
-        'emp':emp
+    emp = Employeeinfo.objects.all()
+    context = {
+        'emp': emp
     }
-    return render(request, 'emptable.html',context)
+    return render(request, 'emptable.html', context)
+
 
 def empformview(request, emp_pk):
     emp = Employeeinfo.objects.get(pk=emp_pk)
-    context={
-        'emp':emp
+    context = {
+        'emp': emp
     }
-    return render(request,'emp.html',context)
+    return render(request, 'emp.html', context)
 
-#_______Customer Info______:
+
+# _______Customer Info______:
 def custform(request):
-    context={
-        'add':True
+    context = {
+        'add': True
     }
     return render(request, 'cust.html', context)
+
+
 def custforminsert(request):
     try:
-        cust= Customer()
-        cust.fname=request.POST['fname']
+        cust = Customer()
+        cust.fname = request.POST['fname']
         cust.lname = request.POST['lname']
         cust.address = request.POST['address']
         cust.phone_number = request.POST['pno']
@@ -132,11 +183,12 @@ def custforminsert(request):
     except IntegrityError:
         return render(request, 'new.html')
     return redirect('custtable')
+
 
 def custformupdate(request, cust_pk):
     try:
-        cust=get_object_or_404(Customer, pk=cust_pk)
-        cust.fname=request.POST['fname']
+        cust = get_object_or_404(Customer, pk=cust_pk)
+        cust.fname = request.POST['fname']
         cust.lname = request.POST['lname']
         cust.address = request.POST['address']
         cust.phone_number = request.POST['pno']
@@ -145,36 +197,45 @@ def custformupdate(request, cust_pk):
     except IntegrityError:
         return render(request, 'new.html')
     return redirect('custtable')
+
+
 def custformdelete(request, cust_pk):
-    cust=get_object_or_404(Customer, pk=cust_pk)
+    cust = get_object_or_404(Customer, pk=cust_pk)
     cust.delete()
     return redirect('custtable')
+
+
 def custtable(request):
     cust = Customer.objects.all()
-    context={
-        'cust':cust
+    context = {
+        'cust': cust
     }
-    return render(request, 'custtable.html',context)
+    return render(request, 'custtable.html', context)
+
+
 def custformview(request, cust_pk):
     cust = Customer.objects.get(pk=cust_pk)
-    context={
-        'cust':cust
+    context = {
+        'cust': cust
     }
-    return render(request,'cust.html',context)
+    return render(request, 'cust.html', context)
 
-#_____For Medicine_______:
+
+# _____For Medicine_______:
 def medform(request):
-    context={
-        'add':True
+    context = {
+        'add': True
     }
     return render(request, 'med.html', context)
 
-def medformview(request,med_pk):
-    med= Medicineinfo.objects.get(pk=med_pk)
-    context={
-        'med':med
+
+def medformview(request, med_pk):
+    med = Medicineinfo.objects.get(pk=med_pk)
+    context = {
+        'med': med
     }
-    return render(request, 'med.html',context)
+    return render(request, 'med.html', context)
+
 
 def medforminsert(request):
     try:
@@ -190,6 +251,7 @@ def medforminsert(request):
         return render(request, 'new.html')
     return redirect('medtable')
 
+
 def medformupdate(request, med_pk):
     try:
         med = get_object_or_404(Medicineinfo, pk=med_pk)
@@ -204,76 +266,79 @@ def medformupdate(request, med_pk):
         return render(request, 'new.html')
     return redirect('medtable')
 
-def medformdelete(request,med_pk):
-    med=get_object_or_404(Medicineinfo, pk=med_pk)
+
+def medformdelete(request, med_pk):
+    med = get_object_or_404(Medicineinfo, pk=med_pk)
     med.delete()
     med.clean()
     return redirect('medtable')
 
+
 def medtable(request):
     med = Medicineinfo.objects.all()
-    context={
-        'med':med
+    context = {
+        'med': med
     }
-    return render(request, 'medtable.html',context)
+    return render(request, 'medtable.html', context)
 
-#_____for purchase_____:
+
+# _____for purchase_____:
 def purchaseform(request):
-    context={
-        'add':True
+    context = {
+        'add': True
     }
     return render(request, 'purchase.html', context)
 
+
 def purchaseformview(request, pur_pk):
-    purchase=Purchase.objects.get(pk=pur_pk)
-    context={
-        'purchase':purchase
+    purchase = Purchase.objects.get(pk=pur_pk)
+    context = {
+        'purchase': purchase
     }
-    return render(request, 'purchase.html',context)
+    return render(request, 'purchase.html', context)
+
 
 def purchaseforminsert(request):
     try:
-        purchase=Purchase()
-        purchase.pname=request.POST['pname']
-        purchase.fname=request.POST['fname']
-        purchase.lname=request.POST['lname']
-        purchase.phone_number=request.POST['pno']
-        purchase.price=request.POST['price']
-        purchase.quantity=request.POST['qty']
-        purchase.total=(int(purchase.price))*(int(purchase.quantity))
+        purchase = Purchase()
+        purchase.pname = request.POST['pname']
+        purchase.fname = request.POST['fname']
+        purchase.lname = request.POST['lname']
+        purchase.phone_number = request.POST['pno']
+        purchase.price = request.POST['price']
+        purchase.quantity = request.POST['qty']
+        purchase.total = (int(purchase.price)) * (int(purchase.quantity))
         purchase.save()
     except IntegrityError:
-        return render(request,'new.html')
+        return render(request, 'new.html')
     return render(request, 'purchase.html')
+
 
 def purchaseformupdate(request, pur_pk):
     try:
-        purchase=get_object_or_404(Purchase, pk=pur_pk)
-        purchase.pname=request.POST['pname']
-        purchase.fname=request.POST['fname']
-        purchase.lname=request.POST['lname']
-        purchase.phone_number=request.POST['pno']
-        purchase.price=request.POST['price']
-        purchase.quantity=request.POST['qty']
-        purchase.total=(int(purchase.price))*(int(purchase.quantity))
+        purchase = get_object_or_404(Purchase, pk=pur_pk)
+        purchase.pname = request.POST['pname']
+        purchase.fname = request.POST['fname']
+        purchase.lname = request.POST['lname']
+        purchase.phone_number = request.POST['pno']
+        purchase.price = request.POST['price']
+        purchase.quantity = request.POST['qty']
+        purchase.total = (int(purchase.price)) * (int(purchase.quantity))
         purchase.save()
     except IntegrityError:
-        return render(request,'new.html')
+        return render(request, 'new.html')
     return render(request, 'purchase.html')
-def purchaseformdelete(request,pur_pk):
-    purchase=Purchase(pk=pur_pk)
+
+
+def purchaseformdelete(request, pur_pk):
+    purchase = Purchase(pk=pur_pk)
     purchase.delete()
     return redirect('purchasetable')
 
+
 def purchasetable(request):
-    purchase= Purchase.objects.all()
-    context={
-        'purchase':purchase
+    purchase = Purchase.objects.all()
+    context = {
+        'purchase': purchase
     }
     return render(request, 'purchasetable.html', context)
-
-
-
-
-
-
