@@ -25,7 +25,7 @@
                 </tr>
                 {% for foo in emp %}
                     <tr>
-                        <td class="idlink"><a href="{% url 'empformview' foo.Emp_id  %}">{{ foo.Emp_id }}</a></td>
+                        <td class="idlink"><a href="{% url 'empformview' foo.id  %}">{{ foo.Emp_id }}</a></td>
                         <td>{{ foo.fname }}</td>
                         <td>{{ foo.lname }}</td>
                         <td>{{ foo.address }}</td>

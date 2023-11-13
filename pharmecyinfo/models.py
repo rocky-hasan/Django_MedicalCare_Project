@@ -25,7 +25,7 @@ class Employeeinfo(models.Model):
     phone_number = models.CharField(max_length=15, unique=True)
 
     def __str__(self):
-        return self.email
+        return f"{self.Emp_id}: {self.fname} {self.lname}"
 
 #______for Customer_______:
 class Customer(models.Model):

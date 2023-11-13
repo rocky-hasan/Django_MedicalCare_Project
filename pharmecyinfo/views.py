@@ -1,6 +1,8 @@
 from typing import Any
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.views import View
+
 from .forms import Dealerform, EmployeeForm
 from django.http import Http404, request
 from .models import Dealerinfo, Employeeinfo, Customer, Medicineinfo, Purchase
@@ -20,49 +22,6 @@ def dealerform(request):
     return render(request, 'dealer.html', context)
 
 
-'''def dealerforminsert(request):
-    try:
-        dealer = Dealerinfo()
-        dealer.dealer_name = request.POST['dname']
-        dealer.address = request.POST['address']
-        dealer.phone_number = request.POST['pno']
-        dealer.email = request.POST['email']
-        dealer.save()
-    except IntegrityError:
-        return render(request, "new.html")
-    return redirect('dealertable')'''
-
-
-'''def dealerformupdate(request, d_pk):
-    try:
-        dealer = get_object_or_404(Dealerinfo, pk=d_pk)
-        dealer.dealer_name = request.POST['dname']
-        dealer.address = request.POST['address']
-        dealer.phone_number = request.POST['pno']
-        dealer.email = request.POST['email']
-        dealer.save()
-    except IntegrityError:
-        return render(request, 'new.html')
-    return redirect('dealertable')'''
-
-
-class DealerUpdateView(UpdateView):
-    template_name = 'dealer.html'
-    context_object_name = 'dealer'
-    model = Dealerinfo
-    form_class = Dealerform
-    success_url = reverse_lazy('dealertable')
-
-    def get_object(self):
-        id = self.kwargs.get("id")  # Use 'id' as the parameter
-        return get_object_or_404(Dealerinfo, id=id)
-
-    def form_valid(self, form):
-        print(form.cleaned_data)
-        return super().form_valid(form)
-
-
-
 # Class Based view
 
 class DealerCreateView(CreateView):
@@ -74,6 +33,30 @@ class DealerCreateView(CreateView):
     def form_valid(self, form):
         print(form.cleaned_data)
         return super().form_valid(form)
+
+
+class DealerUpdateView(View):
+    model = Dealerinfo
+    form_class = Dealerform
+    template_name = 'dealer.html'
+    success_url = '/dealertable/'
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        print("form updated")
+        return super().form_valid(form)
+
+    def post(self, request, pk):
+        try:
+            Dealerinfo.objects.filter(pk=pk).update(
+                dealer_name=request.POST['dname'],
+                address=request.POST['address'],
+                phone_number=request.POST['pno'],
+                email=request.POST['email']
+            )
+        except IntegrityError:
+            return render(request, 'new.html')
+        return redirect(self.success_url)
 
 
 class Dealerformview(DetailView):
@@ -102,22 +85,6 @@ def empform(request):
     return render(request, 'emp.html', context)
 
 
-'''def empforminsert(request):
-    try:
-        emp = Employeeinfo()
-        emp.Emp_id = request.POST['eid']
-        emp.fname = request.POST['fname']
-        emp.lname = request.POST['lname']
-        emp.address = request.POST['address']
-        emp.email = request.POST['email']
-        emp.salary = request.POST['sal']
-        emp.phone_number = request.POST['pno']
-        emp.save()
-    except IntegrityError:
-        return render(request, 'new.html')
-    return redirect('empforminsert')'''
-
-
 class EmpCreateView(CreateView):
     template_name = 'emp.html'
     context_object_name = 'emp'
@@ -125,7 +92,7 @@ class EmpCreateView(CreateView):
     success_url = reverse_lazy('emptable')
 
 
-def empformupdate(request, emp_pk):
+'''def empformupdate(request, emp_pk):
     try:
         emp = get_object_or_404(Employeeinfo, pk=emp_pk)
         emp.Emp_id = request.POST['eid']
@@ -138,13 +105,53 @@ def empformupdate(request, emp_pk):
         emp.save()
     except IntegrityError:
         return render(request, 'new.html')
-    return redirect('emptable')
+    return redirect('emptable')'''
 
 
-def empformdelete(request, emp_pk):
-    emp = Employeeinfo.objects.get(pk=emp_pk)
+class EmpUpdateView(View):
+    model = Employeeinfo
+    form_class = EmployeeForm
+    template_name = 'emp.html'
+    success_url = '/emptable/'
+
+    def form_valid(self, form):
+        print(form.cleaned_data)
+        print("form updated")
+        return super().form_valid(form)
+
+    def post(self, request, pk):
+        try:
+            Employeeinfo.objects.filter(pk=pk).update(
+                Emp_id=request.POST['Emp_id'],
+                fname=request.POST['fname'],
+                lname=request.POST['lname'],
+                address=request.POST['address'],
+                email=request.POST['email'],
+                salary=request.POST['salary'],
+                phone_number=request.POST['phone_number']
+            )
+        except IntegrityError:
+            return render(request, 'new.html')
+        return redirect(self.success_url)
+
+
+class EmployeeFormView(DetailView):
+    model = Employeeinfo
+    template_name = 'emp.html'
+    context_object_name = 'emp'
+
+
+def empformdelete(request, pk):
+    emp = Employeeinfo.objects.get(pk=pk)
     emp.delete()
     return redirect('emptable')
+
+
+'''class EmployeeDeleteView(DeleteView):
+    model = Employeeinfo
+    template_name = 'emp.html'
+    context_object_name = 'pk'
+    success_url = reverse_lazy('emptable')'''
 
 
 def emptable(request):
@@ -155,12 +162,18 @@ def emptable(request):
     return render(request, 'emptable.html', context)
 
 
-def empformview(request, emp_pk):
+class EmployeeTableView(ListView):
+    model = Employeeinfo
+    template_name = 'emptable.html'
+    context_object_name = 'emp'
+
+
+'''def empformview(request, emp_pk):
     emp = Employeeinfo.objects.get(pk=emp_pk)
     context = {
         'emp': emp
     }
-    return render(request, 'emp.html', context)
+    return render(request, 'emp.html', context)'''
 
 
 # _______Customer Info______:
