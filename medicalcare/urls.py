@@ -23,12 +23,18 @@ urlpatterns = [
     path('empformview/<int:pk>/', views.EmployeeFormView.as_view(), name='empformview'),
     path('emptable/', views.EmployeeTableView.as_view(), name='emptable'),
     path('empformdelete/<int:pk>/', views.empformdelete, name='empformdelete'),
-    #path('empformdelete/<int:pk>/', views.EmployeeDeleteView.as_view(), name='empformdelete'),
+
 
         #  Customer_______url_______:
     path('custform/', views.custform, name='custform'),
-    path('custforminsert/', views.custforminsert, name='custforminsert'),
-    path('custformupdate/<int:cust_pk>/',views.custformupdate,name='custformupdate'),
+    path('custforminsert/', views.CustomerCreateView.as_view(), name='custforminsert'),
+
+    #path('custformupdate/<int:cust_pk>/',views.custformupdate,name='custformupdate'),
+    path('custformupdate/<int:pk>/', views.CustomerUpdateView.as_view(), name='custformupdate'),
+
+
+
+
     path('custformdelete/<int:cust_pk>/', views.custformdelete, name='custformdelete'),
     path('custformview/<int:cust_pk>/',views.custformview, name='custformview'),
     path('custtable/', views.custtable, name='custtable'),

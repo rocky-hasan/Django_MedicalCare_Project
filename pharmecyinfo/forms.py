@@ -1,5 +1,5 @@
 from django import forms
-from .models import Dealerinfo, Employeeinfo
+from .models import Dealerinfo, Employeeinfo, Customer
 
 
 class Dealerform(forms.ModelForm):
@@ -10,8 +10,21 @@ class Dealerform(forms.ModelForm):
             'dealer_name': 'dname',
             'address': 'address',
             'email': 'email',
-            'phone_number': 'pno'
+            'phone_number': 'phone_number'
 
+        }
+
+
+class CustomerForm(forms.ModelForm):
+    class Meta:
+        model = Customer
+        fields = ['fname', 'lname', 'address', 'email', 'phone_number']
+        labels = {
+            'fname': 'fname',
+            'lname': 'lname',
+            'address': 'address',
+            'email': 'email',
+            'phone_number': 'phone_number',
         }
 
 
@@ -26,5 +39,5 @@ class EmployeeForm(forms.ModelForm):
             'address': 'address',
             'email': 'email',
             'salary': 'salary',
-            'phone_number': 'pno',
+            'phone_number': 'phone_number',
         }

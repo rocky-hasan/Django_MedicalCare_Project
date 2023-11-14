@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
 
-from .forms import Dealerform, EmployeeForm
+from .forms import Dealerform, EmployeeForm, CustomerForm
 from django.http import Http404, request
 from .models import Dealerinfo, Employeeinfo, Customer, Medicineinfo, Purchase
 from django.db import IntegrityError, models
@@ -51,7 +51,7 @@ class DealerUpdateView(View):
             Dealerinfo.objects.filter(pk=pk).update(
                 dealer_name=request.POST['dname'],
                 address=request.POST['address'],
-                phone_number=request.POST['pno'],
+                phone_number=request.POST['phone_number'],
                 email=request.POST['email']
             )
         except IntegrityError:
@@ -90,25 +90,14 @@ class EmpCreateView(CreateView):
     context_object_name = 'emp'
     form_class = EmployeeForm
     success_url = reverse_lazy('emptable')
+class EmpUpdateView(UpdateView):
+    model = Employeeinfo
+    template_name = 'emp.html'
+    form_class = EmployeeForm
+    context_object_name = 'emp'
+    success_url = reverse_lazy('emptable')
 
-
-'''def empformupdate(request, emp_pk):
-    try:
-        emp = get_object_or_404(Employeeinfo, pk=emp_pk)
-        emp.Emp_id = request.POST['eid']
-        emp.fname = request.POST['fname']
-        emp.lname = request.POST['lname']
-        emp.address = request.POST['address']
-        emp.email = request.POST['email']
-        emp.salary = request.POST['sal']
-        emp.phone_number = request.POST['pno']
-        emp.save()
-    except IntegrityError:
-        return render(request, 'new.html')
-    return redirect('emptable')'''
-
-
-class EmpUpdateView(View):
+'''class EmpUpdateView(View):
     model = Employeeinfo
     form_class = EmployeeForm
     template_name = 'emp.html'
@@ -122,17 +111,17 @@ class EmpUpdateView(View):
     def post(self, request, pk):
         try:
             Employeeinfo.objects.filter(pk=pk).update(
-                Emp_id=request.POST['Emp_id'],
-                fname=request.POST['fname'],
-                lname=request.POST['lname'],
-                address=request.POST['address'],
-                email=request.POST['email'],
-                salary=request.POST['salary'],
-                phone_number=request.POST['phone_number']
+                Emp_id=request.POST.get('Emp_id'),
+                fname=request.POST.get('fname'),
+                lname=request.POST.get('lname'),
+                address=request.POST.get('address'),
+                email=request.POST.get('email'),
+                salary=request.POST.get('salary'),
+                phone_number=request.POST.get('phone_number')
             )
         except IntegrityError:
             return render(request, 'new.html')
-        return redirect(self.success_url)
+        return redirect(self.success_url)'''
 
 
 class EmployeeFormView(DetailView):
@@ -168,14 +157,6 @@ class EmployeeTableView(ListView):
     context_object_name = 'emp'
 
 
-'''def empformview(request, emp_pk):
-    emp = Employeeinfo.objects.get(pk=emp_pk)
-    context = {
-        'emp': emp
-    }
-    return render(request, 'emp.html', context)'''
-
-
 # _______Customer Info______:
 def custform(request):
     context = {
@@ -184,32 +165,19 @@ def custform(request):
     return render(request, 'cust.html', context)
 
 
-def custforminsert(request):
-    try:
-        cust = Customer()
-        cust.fname = request.POST['fname']
-        cust.lname = request.POST['lname']
-        cust.address = request.POST['address']
-        cust.phone_number = request.POST['pno']
-        cust.email = request.POST['email']
-        cust.save()
-    except IntegrityError:
-        return render(request, 'new.html')
-    return redirect('custtable')
+class CustomerCreateView(CreateView):
+    template_name = 'cust.html'
+    context_object_name = 'cust'
+    form_class = CustomerForm
+    success_url = reverse_lazy('custtable')
 
 
-def custformupdate(request, cust_pk):
-    try:
-        cust = get_object_or_404(Customer, pk=cust_pk)
-        cust.fname = request.POST['fname']
-        cust.lname = request.POST['lname']
-        cust.address = request.POST['address']
-        cust.phone_number = request.POST['pno']
-        cust.email = request.POST['email']
-        cust.save()
-    except IntegrityError:
-        return render(request, 'new.html')
-    return redirect('custtable')
+class CustomerUpdateView(UpdateView):
+    model = Customer
+    template_name = 'cust.html'
+    form_class = CustomerForm
+    context_object_name = 'cust'
+    success_url = reverse_lazy('custtable')
 
 
 def custformdelete(request, cust_pk):
