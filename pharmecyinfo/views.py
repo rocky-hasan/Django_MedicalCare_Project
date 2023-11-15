@@ -2,9 +2,8 @@ from typing import Any
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
-
 from .forms import Dealerform, EmployeeForm, CustomerForm
-from django.http import Http404, request
+from django.http import Http404, request, HttpResponseRedirect
 from .models import Dealerinfo, Employeeinfo, Customer, Medicineinfo, Purchase
 from django.db import IntegrityError, models
 from django.views.generic import ListView, DetailView, DeleteView, CreateView, UpdateView
@@ -49,7 +48,7 @@ class DealerUpdateView(View):
     def post(self, request, pk):
         try:
             Dealerinfo.objects.filter(pk=pk).update(
-                dealer_name=request.POST['dname'],
+                dealer_name=request.POST['dealer_name'],
                 address=request.POST['address'],
                 phone_number=request.POST['phone_number'],
                 email=request.POST['email']
@@ -90,12 +89,15 @@ class EmpCreateView(CreateView):
     context_object_name = 'emp'
     form_class = EmployeeForm
     success_url = reverse_lazy('emptable')
+
+
 class EmpUpdateView(UpdateView):
     model = Employeeinfo
     template_name = 'emp.html'
     form_class = EmployeeForm
     context_object_name = 'emp'
     success_url = reverse_lazy('emptable')
+
 
 '''class EmpUpdateView(View):
     model = Employeeinfo
@@ -143,14 +145,6 @@ def empformdelete(request, pk):
     success_url = reverse_lazy('emptable')'''
 
 
-def emptable(request):
-    emp = Employeeinfo.objects.all()
-    context = {
-        'emp': emp
-    }
-    return render(request, 'emptable.html', context)
-
-
 class EmployeeTableView(ListView):
     model = Employeeinfo
     template_name = 'emptable.html'
@@ -186,23 +180,21 @@ def custformdelete(request, cust_pk):
     return redirect('custtable')
 
 
-def custtable(request):
-    cust = Customer.objects.all()
-    context = {
-        'cust': cust
-    }
-    return render(request, 'custtable.html', context)
+class CustomerListView(ListView):
+    model = Customer
+    template_name = 'custtable.html'
+    context_object_name = 'cust'
 
 
-def custformview(request, cust_pk):
-    cust = Customer.objects.get(pk=cust_pk)
-    context = {
-        'cust': cust
-    }
-    return render(request, 'cust.html', context)
+class CustomerDetailsView(DetailView):
+    model = Customer
+    template_name = 'cust.html'
+    context_object_name = 'cust'
 
 
 # _____For Medicine_______:
+from .forms import Medicineform
+
 def medform(request):
     context = {
         'add': True
@@ -218,7 +210,13 @@ def medformview(request, med_pk):
     return render(request, 'med.html', context)
 
 
-def medforminsert(request):
+class MedListView(ListView):
+    model = Medicineinfo
+    template_name = 'medtable.html'
+    context_object_name = 'med'
+
+
+'''def medforminsert(request):
     try:
         med = Medicineinfo()
         med.m_id = request.POST['mid']
@@ -230,10 +228,18 @@ def medforminsert(request):
         med.save()
     except IntegrityError:
         return render(request, 'new.html')
-    return redirect('medtable')
+    return redirect('medtable')'''
 
 
-def medformupdate(request, med_pk):
+class MedicineCreateView(CreateView):
+    template_name = 'med.html'
+    context_object_name = 'med'
+    form_class = Medicineform
+    success_url = reverse_lazy('medtable')
+
+
+
+'''def medformupdate(request, med_pk):
     try:
         med = get_object_or_404(Medicineinfo, pk=med_pk)
         med.m_id = request.POST['mid']
@@ -245,22 +251,35 @@ def medformupdate(request, med_pk):
         med.save()
     except IntegrityError:
         return render(request, 'new.html')
-    return redirect('medtable')
+    return redirect('medtable')'''
 
 
-def medformdelete(request, med_pk):
+class MedUpdateView(UpdateView):
+    model = Medicineinfo
+    template_name = 'med.html'
+    form_class = Medicineform
+    success_url = reverse_lazy('medtable')
+
+
+'''def medformdelete(request, med_pk):
     med = get_object_or_404(Medicineinfo, pk=med_pk)
     med.delete()
     med.clean()
-    return redirect('medtable')
+    return redirect('medtable')'''
 
 
-def medtable(request):
+class MedDeleteView(DeleteView):
+    model = Medicineinfo
+    template_name = 'med_confirm_delete.html'
+    success_url = reverse_lazy('medtable')
+
+
+'''def medtable(request):
     med = Medicineinfo.objects.all()
     context = {
         'med': med
     }
-    return render(request, 'medtable.html', context)
+    return render(request, 'medtable.html', context)'''
 
 
 # _____for purchase_____:

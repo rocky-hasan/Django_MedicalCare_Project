@@ -47,7 +47,7 @@ class Customer(models.Model):
 class Medicineinfo(models.Model):
     m_id = models.IntegerField(unique=True)
     mname = models.CharField(max_length=15)
-    dname = models.CharField(max_length=15)
+    dname = models.ForeignKey(Dealerinfo, on_delete=models.CASCADE)
     desc = models.CharField(max_length=100)
     price = models.BigIntegerField()
     stock = models.BigIntegerField()

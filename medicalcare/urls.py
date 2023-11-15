@@ -28,30 +28,28 @@ urlpatterns = [
         #  Customer_______url_______:
     path('custform/', views.custform, name='custform'),
     path('custforminsert/', views.CustomerCreateView.as_view(), name='custforminsert'),
-
-    #path('custformupdate/<int:cust_pk>/',views.custformupdate,name='custformupdate'),
     path('custformupdate/<int:pk>/', views.CustomerUpdateView.as_view(), name='custformupdate'),
-
-
-
-
+    path('custformview/<int:pk>/', views.CustomerDetailsView.as_view(), name='custformview'),
+    path('custtable/', views.CustomerListView.as_view(), name='custtable'),
     path('custformdelete/<int:cust_pk>/', views.custformdelete, name='custformdelete'),
-    path('custformview/<int:cust_pk>/',views.custformview, name='custformview'),
-    path('custtable/', views.custtable, name='custtable'),
+
 
     #  Medicine_________url__________:
     path('medform/',views.medform, name='medform'),
     path('medformview/<int:med_pk>/',views.medformview, name='medformview'),
-    path('medforminsert/', views.medforminsert, name='medforminsert'),
-    path('medformupdate/<int:med_pk>/', views.medformupdate, name='medformupdate'),
-    path('medformdelete/<int:med_pk>/',views.medformdelete, name='medformdelete'),
-    path('medtable/',views.medtable, name='medtable'),
+
+    path('medforminsert/', views.MedicineCreateView.as_view(), name='medforminsert'),
+    path('medtable/', views.MedListView.as_view(), name='medtable'),
+
+    path('medformupdate/<int:pk>/', views.MedUpdateView.as_view(), name='medformupdate'),
+    path('medformdelete/<int:pk>/', views.MedDeleteView.as_view(), name='medformdelete'),
+
 
     #  Medicine_________url__________:
-    path('purchaseform/',views.purchaseform, name='purchaseform'),
-    path('purchaseformview/<int:pur_pk>/',views.purchaseformview, name='purchaseformview'),
+    path('purchaseform/', views.purchaseform, name='purchaseform'),
+    path('purchaseformview/<int:pur_pk>/', views.purchaseformview, name='purchaseformview'),
     path('purchaseforminsert/', views.purchaseforminsert, name='purchaseforminsert'),
     path('purchaseformupdate/<int:pur_pk>/', views.purchaseformupdate, name='purchaseformupdate'),
-    path('purchaseformdelete/<int:pur_pk>/',views.purchaseformdelete, name='purchaseformdelete'),
-    path('purchasetable/',views.purchasetable, name='purchasetable'),
+    path('purchaseformdelete/<int:pur_pk>/', views.purchaseformdelete, name='purchaseformdelete'),
+    path('purchasetable/', views.purchasetable, name='purchasetable'),
 ]
