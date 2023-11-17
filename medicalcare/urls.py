@@ -36,20 +36,18 @@ urlpatterns = [
 
     #  Medicine_________url__________:
     path('medform/',views.medform, name='medform'),
-    path('medformview/<int:med_pk>/',views.medformview, name='medformview'),
-
+    path('medformview/<int:pk>/', views.MedDetailView.as_view(), name='medformview'),
     path('medforminsert/', views.MedicineCreateView.as_view(), name='medforminsert'),
     path('medtable/', views.MedListView.as_view(), name='medtable'),
-
     path('medformupdate/<int:pk>/', views.MedUpdateView.as_view(), name='medformupdate'),
     path('medformdelete/<int:pk>/', views.MedDeleteView.as_view(), name='medformdelete'),
 
 
     #  Medicine_________url__________:
     path('purchaseform/', views.purchaseform, name='purchaseform'),
-    path('purchaseformview/<int:pur_pk>/', views.purchaseformview, name='purchaseformview'),
-    path('purchaseforminsert/', views.purchaseforminsert, name='purchaseforminsert'),
-    path('purchaseformupdate/<int:pur_pk>/', views.purchaseformupdate, name='purchaseformupdate'),
+    path('purchaseformview/<int:pk>/', views.PurchaseDetaileView.as_view(), name='purchaseformview'),
+    path('purchaseforminsert/', views.PurchaseCreateView.as_view(), name='purchaseforminsert'),
+    path('purchaseformupdate/<int:pk>/', views.PurchaseUpdateView.as_view(), name='purchaseformupdate'),
     path('purchaseformdelete/<int:pur_pk>/', views.purchaseformdelete, name='purchaseformdelete'),
-    path('purchasetable/', views.purchasetable, name='purchasetable'),
+    path('purchasetable/', views.PurchaseListTable.as_view(), name='purchasetable'),
 ]

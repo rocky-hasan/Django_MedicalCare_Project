@@ -2,7 +2,7 @@ from typing import Any
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
-from .forms import Dealerform, EmployeeForm, CustomerForm
+from .forms import Dealerform, EmployeeForm, CustomerForm, PurchaseForm
 from django.http import Http404, request, HttpResponseRedirect
 from .models import Dealerinfo, Employeeinfo, Customer, Medicineinfo, Purchase
 from django.db import IntegrityError, models
@@ -24,6 +24,7 @@ def dealerform(request):
 # Class Based view
 
 class DealerCreateView(CreateView):
+    model = Dealerinfo
     template_name = 'dealer.html'
     context_object_name = 'dealer'
     form_class = Dealerform
@@ -195,6 +196,7 @@ class CustomerDetailsView(DetailView):
 # _____For Medicine_______:
 from .forms import Medicineform
 
+
 def medform(request):
     context = {
         'add': True
@@ -202,12 +204,10 @@ def medform(request):
     return render(request, 'med.html', context)
 
 
-def medformview(request, med_pk):
-    med = Medicineinfo.objects.get(pk=med_pk)
-    context = {
-        'med': med
-    }
-    return render(request, 'med.html', context)
+class MedDetailView(DetailView):
+    model = Medicineinfo
+    template_name = 'emp.html'
+    context_object_name = 'emp'
 
 
 class MedListView(ListView):
@@ -216,42 +216,20 @@ class MedListView(ListView):
     context_object_name = 'med'
 
 
-'''def medforminsert(request):
-    try:
-        med = Medicineinfo()
-        med.m_id = request.POST['mid']
-        med.mname = request.POST['mname']
-        med.dname = request.POST['dname']
-        med.desc = request.POST['desc']
-        med.stock = request.POST['stock']
-        med.price = request.POST['price']
-        med.save()
-    except IntegrityError:
-        return render(request, 'new.html')
-    return redirect('medtable')'''
-
-
 class MedicineCreateView(CreateView):
     template_name = 'med.html'
     context_object_name = 'med'
     form_class = Medicineform
     success_url = reverse_lazy('medtable')
 
+    def form_valid(self, form):
+        response = super(MedicineCreateView, self).form_valid(form)
 
+        dealer_name = form.cleaned_data['dname']
 
-'''def medformupdate(request, med_pk):
-    try:
-        med = get_object_or_404(Medicineinfo, pk=med_pk)
-        med.m_id = request.POST['mid']
-        med.mname = request.POST['mname']
-        med.dname = request.POST['dname']
-        med.desc = request.POST['desc']
-        med.stock = request.POST['stock']
-        med.price = request.POST['price']
-        med.save()
-    except IntegrityError:
-        return render(request, 'new.html')
-    return redirect('medtable')'''
+        dealer = Dealerinfo.objects.get(dname=dealer_name)
+
+        return response
 
 
 class MedUpdateView(UpdateView):
@@ -261,25 +239,10 @@ class MedUpdateView(UpdateView):
     success_url = reverse_lazy('medtable')
 
 
-'''def medformdelete(request, med_pk):
-    med = get_object_or_404(Medicineinfo, pk=med_pk)
-    med.delete()
-    med.clean()
-    return redirect('medtable')'''
-
-
 class MedDeleteView(DeleteView):
     model = Medicineinfo
     template_name = 'med_confirm_delete.html'
     success_url = reverse_lazy('medtable')
-
-
-'''def medtable(request):
-    med = Medicineinfo.objects.all()
-    context = {
-        'med': med
-    }
-    return render(request, 'medtable.html', context)'''
 
 
 # _____for purchase_____:
@@ -290,44 +253,33 @@ def purchaseform(request):
     return render(request, 'purchase.html', context)
 
 
-def purchaseformview(request, pur_pk):
-    purchase = Purchase.objects.get(pk=pur_pk)
-    context = {
-        'purchase': purchase
-    }
-    return render(request, 'purchase.html', context)
+class PurchaseDetaileView(DetailView):
+    model = Purchase
+    template_name = 'purchase.html'
+    context_object_name = 'purchase'
 
 
-def purchaseforminsert(request):
-    try:
-        purchase = Purchase()
-        purchase.pname = request.POST['pname']
-        purchase.fname = request.POST['fname']
-        purchase.lname = request.POST['lname']
-        purchase.phone_number = request.POST['pno']
-        purchase.price = request.POST['price']
-        purchase.quantity = request.POST['qty']
-        purchase.total = (int(purchase.price)) * (int(purchase.quantity))
-        purchase.save()
-    except IntegrityError:
-        return render(request, 'new.html')
-    return render(request, 'purchase.html')
+class PurchaseCreateView(CreateView):
+    model = Purchase
+    template_name = 'purchase.html'
+    form_class = PurchaseForm
+    success_url = reverse_lazy('purchasetable')
+
+    def form_valid(self, form):
+        print("Form is valid. Ready to save.")
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        print("Form is invalid. Errors:")
+        return super().form_invalid(form)
 
 
-def purchaseformupdate(request, pur_pk):
-    try:
-        purchase = get_object_or_404(Purchase, pk=pur_pk)
-        purchase.pname = request.POST['pname']
-        purchase.fname = request.POST['fname']
-        purchase.lname = request.POST['lname']
-        purchase.phone_number = request.POST['pno']
-        purchase.price = request.POST['price']
-        purchase.quantity = request.POST['qty']
-        purchase.total = (int(purchase.price)) * (int(purchase.quantity))
-        purchase.save()
-    except IntegrityError:
-        return render(request, 'new.html')
-    return render(request, 'purchase.html')
+class PurchaseUpdateView(UpdateView):
+    model = Purchase
+    template_name = 'purchase.html'
+    context_object_name = 'purchase'
+    form_class = PurchaseForm
+    success_url = reverse_lazy('purchasetable')
 
 
 def purchaseformdelete(request, pur_pk):
@@ -336,9 +288,7 @@ def purchaseformdelete(request, pur_pk):
     return redirect('purchasetable')
 
 
-def purchasetable(request):
-    purchase = Purchase.objects.all()
-    context = {
-        'purchase': purchase
-    }
-    return render(request, 'purchasetable.html', context)
+class PurchaseListTable(ListView):
+    model = Purchase
+    context_object_name = 'purchase'
+    template_name = 'purchasetable.html'

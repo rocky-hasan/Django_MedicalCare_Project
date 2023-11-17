@@ -64,7 +64,10 @@ class Purchase(models.Model):
     phone_number = models.CharField(max_length=15)
     price = models.IntegerField()
     quantity = models.IntegerField()
-    total = models.IntegerField()
 
     def __str__(self):
         return self.pname
+
+    @property
+    def total_cost(self):
+        return self.price * self.quantity

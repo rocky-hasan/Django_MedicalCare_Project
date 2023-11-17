@@ -1,5 +1,19 @@
 from django import forms
-from .models import Dealerinfo, Employeeinfo, Customer, Medicineinfo
+from .models import Dealerinfo, Employeeinfo, Customer, Medicineinfo, Purchase
+
+
+class PurchaseForm(forms.ModelForm):
+    class Meta:
+        model = Purchase
+        fields = ['pname', 'fname', 'lname', 'phone_number', 'price', 'quantity']
+        labels = {
+            'pname': 'pname',
+            'fname': 'fname',
+            'lname': 'lname',
+            'phone_number': 'phone_number',
+            'price': 'price',
+            'quantity': 'quantity'
+        }
 
 
 class Medicineform(forms.ModelForm):

@@ -51,10 +51,10 @@
                             <label for="dname" class="form-control-label">Dealer Name:</label>
                         </div>
                         <div class="form-group col-md-8">
-                            <select name="dealer_name" class="form-control" id="dname">
+                            <select name="dname" class="form-control" id="dname">
                                 <option value="" selected disabled>Select Dealer</option>
-                                {% for dealers in dealers %}
-                                    <option value="{{ dealers.id }}">{{ dealers.name }}</option>
+                                {% for dealers in dealer_name %}
+                                    <option value="{{ dealers.id }}">{{ dealers.dname }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -131,10 +131,10 @@
                             <label for="dname" class="form-control-label">Dealer Name:</label>
                         </div>
                         <div class="form-group col-md-8">
-                            <select name="dealer_name" class="form-control" id="dname">
+                            <select name="dname" class="form-control" id="dname">
                                 <option value="" selected disabled>Select Dealer</option>
-                                {% for dealers in dealers %}
-                                    <option value="{{ dealers.id }}">{{ dealers.name }}</option>
+                                {% for dealers in dealer %}
+                                    <option value="{{ dealers.id }}">{{ dealers.dname }}</option>
                                 {% endfor %}
                             </select>
                         </div>
